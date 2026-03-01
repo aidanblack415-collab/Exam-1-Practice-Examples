@@ -1,0 +1,1178 @@
+```python
+from pathlib import Path
+import random, html, json, textwrap
+
+out_path = Path("/mnt/data/uscp_practice_test_60q_harder.html")
+
+# Build question bank
+# Each question: {id, category, prompt_html, choices:[...], correct_index, explanation}
+questions = []
+
+def q(prompt, choices, correct, explanation, category):
+    questions.append({
+        "category": category,
+        "prompt": prompt.strip(),
+        "choices": choices,
+        "correct": correct,
+        "explanation": explanation.strip()
+    })
+
+# -------------------------
+# LEGAL SCENARIO QUESTIONS (30)
+# -------------------------
+
+q(
+"""<b>1.</b> You and your partner are working a foot post near the Capitol complex when you see a man (Ray) arguing with a woman (Lena) over a phone. Ray suddenly shoves Lena hard with both hands, and she falls into a metal stanchion, cutting her cheek. Lena stands up, dizzy, and Ray says, “I’m not done,” then grabs a broken stanchion pole and raises it over his shoulder as if to swing. You draw your taser and command Ray to drop it. Ray backs up, keeps the pole raised, and takes two steps toward Lena before dropping it and trying to walk away. Medical later documents stitches and a mild concussion. What is the <u>best</u> charge for Ray?""",
+[
+    "Simple Assault",
+    "Aggravated Assault",
+    "Assault with a Dangerous Weapon (ADW)",
+    "Threats to do Bodily Harm"
+],
+2,
+"Multiple charges could be considered (assault and threats), but the raised metal pole used in a menacing manner elevates the assault to ADW. The injury occurred during the assault, but the key enhancement here is the dangerous weapon used to threaten/assault.",
+"Legal"
+)
+
+q(
+"""<b>2.</b> During a traffic stop in extended jurisdiction, the driver (Maya) immediately tells you she has a loaded pistol in her purse. She provides a valid D.C. firearms registration card for the pistol but cannot produce a D.C. carry permit. The pistol is loaded, in the purse on the passenger seat, and within her reach. She says she “thought registration meant I could carry.” What is the <u>best</u> charge?""",
+[
+    "Unregistered Firearm",
+    "Carrying a Pistol Without a License (CPWL)",
+    "Lawful Transport of Firearms (no charge)",
+    "Unlawful Possession of Ammunition"
+],
+1,
+"Registration does not authorize carrying. With the loaded pistol accessible within reach and no carry license, CPWL is the best charge. Ammunition and registration issues may be considered depending on facts, but the primary violation is carrying without a license.",
+"Legal"
+)
+
+q(
+"""<b>3.</b> You respond to a call for “man with a gun” outside a public conveyance stop. The caller says a male (Derrick) flashed a handgun and said, “Back up before I drop you,” while pointing it at the ground near the victim’s feet. On arrival, Derrick is found 20 yards away. He has a handgun tucked in his waistband and admits he “showed it to scare him.” The victim is visibly shaken and states they believed they were about to be shot. What is the <u>best</u> charge?""",
+[
+    "Assault with a Dangerous Weapon (Gun)",
+    "Threats to do Bodily Harm",
+    "Simple Assault",
+    "Disorderly Conduct (Public Buildings)"
+],
+0,
+"The firearm was used to menace and place the victim in fear of immediate bodily harm, supporting ADW-Gun as the best charge. Threats and disorderly may apply, but ADW captures the weapon-based assault.",
+"Legal"
+)
+
+q(
+"""<b>4.</b> You conduct an administrative search at a building screening point. In a backpack you find a small plastic vial labeled “vitamins,” containing white powder. The subject (Nate) says it’s “just for energy.” You also recover a digital scale with powder residue and multiple empty baggies. CSS field tests the powder and it returns positive for cocaine. Nate has $840 in small bills and two phones with repeated messages about “meeting spots.” What is the <u>best</u> charge?""",
+[
+    "Possession of a Controlled Substance (simple possession)",
+    "Possession with Intent to Distribute (PWID)",
+    "Possession of Drug Paraphernalia only",
+    "No charge (insufficient evidence)"
+],
+1,
+"Several indicators go beyond personal-use possession: scale with residue, baggies, small-denomination cash, and communications consistent with distribution. That combination supports PWID as the best charge, not just simple possession.",
+"Legal"
+)
+
+q(
+"""<b>5.</b> Inside a congressional office suite during normal business hours, staff report an individual (Blaine) entered without an appointment and refuses to leave a private office area. The Chief of Staff is willing to be the complainant. You explain the subject may be arrested if they refuse to leave. The Chief of Staff then clearly demands, in your presence, that Blaine leave immediately. Blaine responds, “No, I’m staying,” and sits down. What is the <u>best</u> charge?""",
+[
+    "Unlawful Entry",
+    "Disorderly Conduct (Public Buildings)",
+    "Demonstrating (Crowding/Obstructing/Incommoding)",
+    "Contempt of Court"
+],
+0,
+"For offices treated as private space during business hours, once the lawful person in charge is willing to complain and demands the subject leave in the officer’s presence, refusal supports Unlawful Entry as the best charge.",
+"Legal"
+)
+
+q(
+"""<b>6.</b> After hours in a congressional building, you find a non-staff visitor (Terry) wandering in a hallway near closed offices. Terry claims he “got lost” and is cooperative. He cannot provide a valid reason to be in the building after hours and has no credentials. He refuses to leave when ordered, stating, “I’m not doing anything wrong.” What is the <u>best</u> charge if he continues to refuse to leave?""",
+[
+    "Unlawful Entry",
+    "Disorderly Loud Noises at Night",
+    "Illegal Construction (DCMR)",
+    "No charge because he was peaceful"
+],
+0,
+"After hours, USCP is responsible for public spaces in the building, including office areas. If a non-authorized person refuses to leave when ordered and has no right to be there, Unlawful Entry is the best charge.",
+"Legal"
+)
+
+q(
+"""<b>7.</b> During a pedestrian stop based on reasonable suspicion of a theft, the subject (Sam) gives a name and DOB that return a WALES/NCIC hit for a misdemeanor arrest warrant. Dispatch advises the warrant appears active, but you have not yet confirmed with the originating agency. Sam begins to tense up, repeatedly glancing at your duty weapon, and shifts his feet toward an alley. What is the <u>best</u> next step before taking Sam into custody on the warrant?""",
+[
+    "Immediately handcuff and arrest based on the hit",
+    "Ask dispatch to confirm the warrant through the originating agency/ORI",
+    "Read Miranda immediately so you can question Sam",
+    "Let Sam go because misdemeanor warrants require the offense to occur in your presence"
+],
+1,
+"Hits must be verified/confirmed before arrest. The best step is to have dispatch confirm validity through the originating agency/ORI (and check warrant date/extradition issues as applicable) before making the arrest.",
+"Legal"
+)
+
+q(
+"""<b>8.</b> At a screening checkpoint, you find a switchblade knife in a visitor’s jacket pocket. The visitor (Omar) says he forgot it was there. He is otherwise compliant and has no other contraband. What is the <u>best</u> charge?""",
+[
+    "Possession of a Prohibited Weapon – A (PPW-A)",
+    "Possession of a Prohibited Weapon – B (PPW-B)",
+    "Carrying a Dangerous Weapon (CDW) – Knife",
+    "No charge (policy issue only)"
+],
+0,
+"A switchblade is specifically listed under prohibited weapons in the PPW-A category. CDW may be considered in other knife contexts, but a switchblade falls under PPW-A as the best charge.",
+"Legal"
+)
+
+q(
+"""<b>9.</b> You stop a vehicle for a moving violation. In plain view on the passenger floor is an open box of loose handgun ammunition. The driver has no firearm and consents to a search; you find no firearm in the vehicle. The driver provides a valid D.C. carry permit but no firearms registration card. What is the <u>best</u> charge based on these facts?""",
+[
+    "Unlawful Possession of Ammunition",
+    "CPWL",
+    "Unregistered Firearm",
+    "No charge"
+],
+0,
+"Possessing ammunition can be unlawful depending on DC requirements tied to registration/authorization. With ammunition present but no registered firearm tied to the person, Unlawful Possession of Ammunition is the best charge on these limited facts.",
+"Legal"
+)
+
+q(
+"""<b>10.</b> You observe a person (Kira) sprint away upon seeing officers. You catch up and detain her. She has a large screwdriver, a small flashlight, and a key fob to a vehicle parked nearby. The vehicle’s window is shattered and the steering column is peeled. Kira claims she is “helping a friend move the car.” The vehicle owner is located and states they do not know Kira and did not give permission. What is the <u>best</u> charge?""",
+[
+    "Unauthorized Use of a Motor Vehicle (UUV)",
+    "Theft I – Auto",
+    "Unlawful Entry of a Motor Vehicle (UEV)",
+    "Receiving Stolen Property"
+],
+0,
+"These facts support unauthorized use—operating/control of a vehicle without permission. Theft-auto requires intent to permanently deprive; UEV centers on entering a motor vehicle, but the best primary charge here is UUV based on control/attempted operation without permission.",
+"Legal"
+)
+
+q(
+"""<b>11.</b> You respond to a report of a fight in a bar. The suspect (Carla) throws a punch that misses, then grabs a glass bottle, breaks it on the bar edge, and waves the jagged bottle toward the victim while advancing. The victim backs away and says they believed they would be cut. Carla stops when officers arrive and drops the bottle. What is the <u>best</u> charge?""",
+[
+    "Simple Assault",
+    "Assault with a Dangerous Weapon (ADW)",
+    "Affray",
+    "Disorderly Conduct (Public Buildings)"
+],
+1,
+"Even without a completed strike, using a jagged broken bottle in a menacing manner to place someone in fear supports ADW as the best charge. Affray/disorderly may apply, but ADW captures the weapon-based assault.",
+"Legal"
+)
+
+q(
+"""<b>12.</b> You are assigned to a restricted “staff only” corridor clearly marked with signage and staffed by officers. A visitor (Paul) slips past a stanchion while filming and enters the corridor. You give one clear warning/order to leave the restricted area. Paul refuses and says, “I’m documenting this; you can’t stop me,” and continues deeper into the corridor. What is the <u>best</u> charge?""",
+[
+    "Unlawful Entry",
+    "Disorderly Conduct (Public Buildings)",
+    "Demonstrating (Crowding/Obstructing/Incommoding)",
+    "Illegal Panhandling"
+],
+0,
+"Entering/remaining in a restricted area after a clear order and posted restriction supports Unlawful Entry as the best charge. Disorderly may be added, but the core violation is refusal to leave a restricted area.",
+"Legal"
+)
+
+q(
+"""<b>13.</b> You observe a person (Nina) in a park at night yelling profanities at passersby. When asked to stop, Nina steps toward a bystander, clenches fists, and says, “I’ll smash you right now.” The bystander retreats and calls 911. Nina never actually strikes anyone. What is the <u>best</u> charge?""",
+[
+    "Disorderly Conduct – Causing Unreasonable Fear",
+    "Simple Assault",
+    "Threats to do Bodily Harm",
+    "Inciting Violence"
+],
+0,
+"Acting in a reckless way that causes a person to fear being harmed fits disorderly causing unreasonable fear. Threats could fit too, but the best charge here focuses on the fear-inducing conduct in public that escalated the situation.",
+"Legal"
+)
+
+q(
+"""<b>14.</b> During a stop, you find a handgun in the trunk of an SUV. It is unloaded, locked in a hard case, and the ammunition is in a separate locked container. The driver (Evan) is traveling through D.C. to a lawful destination. Evan has no D.C. carry permit and the firearm is not registered in D.C. What is the <u>best</u> charge?""",
+[
+    "No charge (lawful transport satisfied)",
+    "CPWL",
+    "Unregistered Firearm",
+    "Unlawful Transport of Firearms"
+],
+2,
+"Even if transport conditions are otherwise careful, firearms possessed in D.C. must generally be registered with MPD; lacking registration supports Unregistered Firearm as the best charge on these facts.",
+"Legal"
+)
+
+q(
+"""<b>15.</b> You respond to a disturbance on a bus. The suspect (Chuck) goes seat-to-seat aggressively asking for money. When refused, Chuck blocks the aisle and shouts, “I’ll beat anyone who looks at me,” and the driver cannot safely continue. When you board, Chuck is seated quietly but multiple witnesses and the driver provide consistent statements about what occurred moments earlier. What is the <u>best</u> charge?""",
+[
+    "Illegal Panhandling (Aggressive)",
+    "Disorderly – Public Conveyance",
+    "Threats (Misdemeanor)",
+    "No charge because he is calm now"
+],
+1,
+"The behavior disrupted use of a public conveyance and impeded normal operation. Illegal panhandling/aggressive conduct may fit, but the best charge capturing the disturbance on the bus and its impact is Disorderly – Public Conveyance.",
+"Legal"
+)
+
+q(
+"""<b>16.</b> You catch a suspect (Kevin) exiting a residence through a back door with a bag containing items taken from inside. Kevin entered through an unlocked sliding door while the residents were away. He also has a prohibited knife in his pocket. What is the <u>best</u> charge for the entry/theft conduct?""",
+[
+    "Theft II",
+    "Unlawful Entry",
+    "Burglary",
+    "Receiving Stolen Property"
+],
+2,
+"Entry into a dwelling with intent to commit a crime inside is best charged as burglary. Theft charges may follow, but burglary captures the unlawful entry plus intent.",
+"Legal"
+)
+
+q(
+"""<b>17.</b> You arrive at a scene where a suspect (Jess) took a phone from a victim after pressing a handgun against the victim’s head and stating, “Give it to me or you’re dead.” Jess flees and is later caught with the phone. What is the <u>best</u> charge?""",
+[
+    "Robbery",
+    "Theft II",
+    "ADW-Gun",
+    "Threats to do Bodily Harm"
+],
+0,
+"The taking by force/violence or intimidation is robbery. ADW and threats may apply, but robbery is the best charge for the core conduct of taking property through intimidation with a weapon.",
+"Legal"
+)
+
+q(
+"""<b>18.</b> A suspect (Edward) is reported to have groped an unconscious person in a booth and then used a phone to take an up-skirt photo. The victim is incoherent due to intoxication. What is the <u>best</u> charge for the touching conduct?""",
+[
+    "Simple Assault",
+    "3rd Degree Sexual Abuse",
+    "4th Degree Sexual Abuse",
+    "Voyeurism only"
+],
+2,
+"The facts describe sexual contact (not a sex act) with a victim who is unaware/incapable due to intoxication—best aligning with 4th degree sexual abuse (non-violent sex-contact with unaware victim). Voyeurism may also apply, but the question asks for the touching conduct.",
+"Legal"
+)
+
+q(
+"""<b>19.</b> During a loud demonstration, a subject (Rae) repeatedly steps into a narrow entrance area, blocking staff and visitors. Officers give clear orders to “cease crowding/obstructing” and Rae complies for a short time, then intentionally resumes blocking while chanting. After multiple warnings and documented time between warnings and renewed obstruction, Rae continues. What is the <u>best</u> charge?""",
+[
+    "Demonstrating (Crowding/Obstructing/Incommoding)",
+    "Disorderly Loud Noises at Night",
+    "Unlawful Entry",
+    "Affray"
+],
+0,
+"Repeatedly crowding/obstructing/incommoding after warnings is best charged as demonstrating (crowding/obstructing/incommoding). Loud noise, unlawful entry, and affray do not best capture the repeated obstruction after warnings.",
+"Legal"
+)
+
+q(
+"""<b>20.</b> A subject is found with a stay-away order issued as a condition of release. You observe them within the prohibited area and confirm through records that the order is valid. The subject admits they “came anyway.” What is the <u>best</u> charge?""",
+[
+    "Violation of a Condition of Release (Stay Away Order)",
+    "Contempt of Court",
+    "Unlawful Entry",
+    "Disorderly Conduct"
+],
+0,
+"A stay-away order tied to release conditions is best charged as violation of a condition of release. Contempt may be related, but the direct, best charge is the explicit violation.",
+"Legal"
+)
+
+q(
+"""<b>21.</b> You stop a suspect (Frank) after hearing shots. Frank is holding a pistol and an open alcohol container. Witnesses saw Frank fire several rounds into the air. Frank produces only a D.C. firearms registration card and cannot produce a carry permit. What is the <u>best</u> primary charge?""",
+[
+    "Disorderly Loud Noises at Night",
+    "Possession of Open Container of Alcohol (POCA)",
+    "CPWL",
+    "Unlawful Discharge of a Firearm"
+],
+3,
+"Several charges may apply (CPWL and POCA), but firing rounds is the most serious conduct and supports Unlawful Discharge of a Firearm as the best primary charge.",
+"Legal"
+)
+
+q(
+"""<b>22.</b> You respond to a fight involving a person who claims to be off-duty law enforcement and flashes a badge during the altercation. Witnesses report the suspect struck another person, then fled. Later medical records show the victim was unconscious for multiple days. The suspect is located and admits the fight but says, “I’m a cop, you can’t touch me.” What is the <u>best</u> charge based on injuries?""",
+[
+    "Simple Assault",
+    "Aggravated Assault",
+    "Felony Assault",
+    "Affray"
+],
+2,
+"Extended unconsciousness and serious injury factors elevate the assault. The best charge here is felony assault based on significant bodily injury beyond simple assault thresholds.",
+"Legal"
+)
+
+q(
+"""<b>23.</b> You arrest a subject on a bench warrant. During the arrest, the subject repeatedly pulls away and tries to run, forcing officers to use control holds. The subject never lands a strike but actively resists being handcuffed. What is the <u>best</u> additional charge related to the arrest struggle?""",
+[
+    "Resisting Arrest",
+    "Assault on a Police Officer (Felony)",
+    "Simple Assault",
+    "Disorderly Conduct"
+],
+0,
+"Active resistance to being placed in custody supports resisting arrest. Assault on an officer typically requires assaultive conduct beyond mere pulling away, depending on jurisdictional definitions; here the best additional charge is resisting arrest.",
+"Legal"
+)
+
+q(
+"""<b>24.</b> A person (George) is sitting on a bench on Capitol Grounds and is observed smoking what appears to be marijuana. After a lawful stop, a field test confirms THC. George has about 1.0 oz of marijuana and rolling papers. What is the <u>best</u> charge on Capitol Grounds?""",
+[
+    "Possession 2.0 oz or less (legal)",
+    "Consumption of Marijuana in a Public Space",
+    "Possession with Intent to Distribute",
+    "Possession of Drug Paraphernalia"
+],
+1,
+"Even where small possession amounts may be treated differently depending on jurisdiction, consuming marijuana in a public space is a distinct offense. The best charge is consumption of marijuana in a public space.",
+"Legal"
+)
+
+q(
+"""<b>25.</b> Inside a public building, a person (Craig) runs through a hearing area nude with slogans painted on their body, yelling and causing disruption. Staff physically restrain Craig to stop the behavior. What is the <u>best</u> charge?""",
+[
+    "Demonstrating (Crowding/Obstructing/Incommoding)",
+    "Unlawful Conduct",
+    "Indecent Exposure",
+    "Disorderly Conduct – Public Buildings"
+],
+2,
+"Nudity exposing genitalia/anus in public is indecent exposure. Demonstrating/disorderly may also apply, but the best charge tied to the primary act is indecent exposure.",
+"Legal"
+)
+
+q(
+"""<b>26.</b> At building screening, you locate a 4-inch folding knife clipped inside a pocket. The subject states, “If anyone messes with me today I’m going to use it,” and continues making statements showing intent to use it against another person later. What is the <u>best</u> charge?""",
+[
+    "PPW-A",
+    "PPW-B",
+    "CDW (Carrying a Dangerous Weapon)",
+    "No charge"
+],
+2,
+"Even if the knife itself might not be categorized as a per se prohibited weapon, the expressed intent and circumstances can establish dangerousness for CDW. PPW-A is for specifically listed weapons like switchblades; PPW-B requires unlawful specific intent for some items, but here CDW is the best fit.",
+"Legal"
+)
+
+q(
+"""<b>27.</b> An officer observes a person (Tina) kick an individual to the ground during an argument, then kick them again while down. The victim suffers protracted loss of function of a limb and requires lengthy hospitalization. What is the <u>best</u> charge?""",
+[
+    "Simple Assault",
+    "Aggravated Assault",
+    "Felony Assault",
+    "Disorderly Conduct"
+],
+2,
+"Serious bodily injury with protracted impairment supports felony-level assault. Aggravated assault can be considered depending on statutory definitions, but the best charge here is felony assault based on serious injury.",
+"Legal"
+)
+
+q(
+"""<b>28.</b> You stop a vehicle for a traffic infraction. The driver is suspended and provides a friend’s name/DOB. Dispatch returns that the name belongs to another person and the driver later admits it was false. What is the <u>best</u> charge for the false information?""",
+[
+    "False ID to Consume Alcohol",
+    "Providing False Information",
+    "Unlawful Protest at a Residence",
+    "Tampering with GPS (Home Arrest)"
+],
+1,
+"Providing a false identity to law enforcement during an investigation/stop supports the best charge of providing false information. The other options do not match the conduct.",
+"Legal"
+)
+
+q(
+"""<b>29.</b> You respond to a call where a person (Liam) is screaming in a public building lobby, using threatening language, and refuses to stop after multiple requests. The behavior disrupts normal business and people cannot safely pass. What is the <u>best</u> charge?""",
+[
+    "Disorderly Conduct – Public Buildings",
+    "Disorderly Loud Noises at Night",
+    "Unlawful Entry",
+    "Inciting Violence"
+],
+0,
+"Loud, threatening, disruptive conduct in a public building that impedes orderly conduct of business is best charged as disorderly conduct in public buildings.",
+"Legal"
+)
+
+q(
+"""<b>30.</b> A person (Brett) opens the driver door at a red light, points a knife at the driver, and demands the vehicle. The driver accelerates and escapes, and Brett flees without obtaining the vehicle. What is the <u>best</u> charge?""",
+[
+    "Attempt Carjacking",
+    "Armed Carjacking",
+    "ADW – Knife",
+    "CDW – Knife"
+],
+0,
+"The suspect attempted to take a vehicle by force/threat but did not succeed. That supports attempt carjacking as the best charge, even though ADW/CDW could also be considered.",
+"Legal"
+)
+
+# -------------------------
+# NON-LEGAL QUESTIONS (30): policy, radio, geography, warrants/NCIC, USCP org, complaints, EPO 107.02, etc.
+# -------------------------
+
+q(
+"""<b>31.</b> WALES stands for:""",
+[
+    "Washington Area Law Enforcement System",
+    "Washington Arrest and Location Entry System",
+    "Wide Area Law Enforcement Security",
+    "Warrant and Arrest Law Enforcement System"
+],
+0,
+"WALES is the Washington Area Law Enforcement System (the home system, administered by MPD, with automatic national checks through NCIC).",
+"Non-Legal"
+)
+
+q(
+"""<b>32.</b> NCIC is administered by:""",
+[
+    "MPD",
+    "The FBI",
+    "NLETS",
+    "USCP Communications"
+],
+1,
+"NCIC is administered by the FBI and provides access to multiple record files to support law enforcement objectives (fugitives, stolen property, officer safety, etc.).",
+"Non-Legal"
+)
+
+q(
+"""<b>33.</b> NLETS is best described as:""",
+[
+    "A local-only system that returns DC bench warrants",
+    "A not-for-profit message switching network linking law enforcement/public safety agencies nationwide",
+    "A single database only for criminal histories",
+    "A unit within NCIC that confirms warrants"
+],
+1,
+"NLETS is a not-for-profit, computer-based message switching system that links state/local/federal agencies for critical information exchange.",
+"Non-Legal"
+)
+
+q(
+"""<b>34.</b> A WALES/NCIC “hit” must go through these three steps:""",
+[
+    "Locate, Confirm, Verify",
+    "Confirm, Verify, Arrest",
+    "Verify, Confirm, Locate",
+    "Verify, Arrest, Locate"
+],
+2,
+"The required sequence is: Verify (match the person/vehicle), Confirm (with originating agency before arrest/seizure), and Locate (entered by dispatcher to remove/cancel hit after confirmation).",
+"Non-Legal"
+)
+
+q(
+"""<b>35.</b> A misdemeanor arrest warrant is generally valid for service if:""",
+[
+    "It remains in WALES",
+    "It is under 30 days old",
+    "The offense occurred in the officer’s presence",
+    "It was issued by a federal judge"
+],
+0,
+"Misdemeanor warrants are valid for service if they remain in WALES (with attention to issue date/validity rules and confirmation).",
+"Non-Legal"
+)
+
+q(
+"""<b>36.</b> A felony arrest warrant is generally valid for service if:""",
+[
+    "It remains in NCIC",
+    "It is less than one year old",
+    "The issuing officer is available by phone",
+    "The suspect admits the underlying offense"
+],
+0,
+"Felony warrants are valid for service if they remain in NCIC (and must still be confirmed/verified before arrest).",
+"Non-Legal"
+)
+
+q(
+"""<b>37.</b> For an out-of-jurisdiction warrant where the subject is arrested in D.C., the correct general charge is:""",
+[
+    "Fugitive from Justice (regardless of underlying offense)",
+    "Bench Warrant",
+    "Bail Reform Act",
+    "Contempt of Court"
+],
+0,
+"A person arrested in D.C. who is wanted in another jurisdiction is charged as Fugitive from Justice, regardless of the underlying crime, after confirmation and extradition willingness.",
+"Non-Legal"
+)
+
+q(
+"""<b>38.</b> If communications advises you of a possible wanted hit (e.g., 10-3-0 / 10-3-0-F / 10-3-0-W) while you are a single unit with the subject, the best immediate action is to:""",
+[
+    "Turn down/secure your radio, request backup, and keep talking to the subject",
+    "Announce the hit loudly to deter flight",
+    "Immediately read Miranda to preserve the case",
+    "Walk away from the subject until confirmation comes back"
+],
+0,
+"For single-unit wanted handling: secure your radio, wait for backup, maintain rapport/conversation, and keep good tactical positioning while dispatch stands by.",
+"Non-Legal"
+)
+
+q(
+"""<b>39.</b> Which non-verbal indicator most strongly suggests the subject is assessing a weapon grab opportunity?" "",
+[
+    "Avoiding eye contact",
+    "Target glance toward your firearm or a body part they plan to attack",
+    "Thousand-yard stare",
+    "Talking rapidly"
+],
+1,
+"Target glancing at your weapon or a body part is a classic pre-attack indicator; it suggests planning to grab/strike.",
+"Non-Legal"
+)
+
+q(
+"""<b>40.</b> In D.C. geography, North Capitol Street divides:""",
+[
+    "NW and SW",
+    "NE and SE",
+    "NW and NE",
+    "SW and SE"
+],
+2,
+"North Capitol divides NW and NE; South Capitol divides SW and SE. East Capitol divides NE and SE, and the Mall divides SW and NW.",
+"Non-Legal"
+)
+
+q(
+"""<b>41.</b> In the D.C. grid, numbered streets run:""",
+[
+    "East–West",
+    "North–South",
+    "Diagonally",
+    "Only in NW"
+],
+1,
+"Numbered streets run North–South in all quadrants where present.",
+"Non-Legal"
+)
+
+q(
+"""<b>42.</b> In the D.C. grid, lettered streets run:""",
+[
+    "North–South",
+    "East–West",
+    "Only diagonally",
+    "Only in NE/SE"
+],
+1,
+"Lettered streets run East–West.",
+"Non-Legal"
+)
+
+q(
+"""<b>43.</b> When determining the block number on a lettered street, the block number is dictated by:""",
+[
+    "The nearest avenue name",
+    "The numbered street cross streets",
+    "The letter’s position in the alphabet only",
+    "The quadrant (NW/NE/SW/SE) only"
+],
+1,
+"In the DC system, numbered streets dictate the block number for lettered streets (and lettered streets dictate block numbers for numbered streets).",
+"Non-Legal"
+)
+
+q(
+"""<b>44.</b> Avenues in D.C. generally run:""",
+[
+    "Strictly East–West only",
+    "Strictly North–South only",
+    "Diagonally across numbered and lettered streets and are often named after states",
+    "Only around the Capitol grounds"
+],
+2,
+"Avenues cut diagonally and are typically named for states (with noted exceptions), and they generally do not dictate block numbers.",
+"Non-Legal"
+)
+
+q(
+"""<b>45.</b> Prior notification for armed LEO/agent admittance into Capitol Buildings is typically distributed by:""",
+[
+    "The Library of Congress",
+    "Special Events Section or Watch Commander",
+    "The U.S. Marshals Service only",
+    "The complainant officer"
+],
+1,
+"Prior notification is issued/distributed by Special Events Section (or Watch Commander after hours) via VIP/FYI-type notifications to division offices.",
+"Non-Legal"
+)
+
+q(
+"""<b>46.</b> For an on-duty LEO/agent entering a Capitol Building armed on official business with proper escort and credentials, the correct screening rule is:""",
+[
+    "Administrative search is always required",
+    "No administrative search is required",
+    "They must surrender the firearm to CSS",
+    "They may enter unescorted with no verification"
+],
+1,
+"With verified credentials, escort, and authorized firearm on official business, no administrative search is required (per your notes).",
+"Non-Legal"
+)
+
+q(
+"""<b>47.</b> A LEO arrives armed <u>without</u> prior notification and is <u>alone</u> (visiting/sightseeing). Best procedure is:""",
+[
+    "Deny entry permanently",
+    "Verify credentials through SES, arrange escort to secure weapon in a lock box, conduct administrative search",
+    "Allow entry with firearm if they claim to be a police officer",
+    "Have them leave the grounds immediately while still armed"
+],
+1,
+"Without prior notification and not on official business, weapons must be secured (lock box), credentials verified through SES, and an administrative search conducted prior to entry.",
+"Non-Legal"
+)
+
+q(
+"""<b>48.</b> Members of Congress may carry a firearm into Capitol Buildings provided it is:""",
+[
+    "Loaded and concealed",
+    "Unloaded and securely wrapped",
+    "Registered in any state",
+    "Carried only by staff"
+],
+1,
+"Per your notes: Member may carry if unloaded and securely wrapped; notify a supervisor and escort to destination.",
+"Non-Legal"
+)
+
+q(
+"""<b>49.</b> Complaints against USCP employees may be made:""",
+[
+    "Only in writing",
+    "Only in person",
+    "In person, by phone, or in writing (including anonymous complaints)",
+    "Only through the Inspector General"
+],
+2,
+"Policy notes: complaints may be made in person, over the telephone, or in writing; anonymous complaints are accepted for investigation.",
+"Non-Legal"
+)
+
+q(
+"""<b>50.</b> The form used when completing a complaint report (when a supervisor is not available) is:""",
+[
+    "CP-76",
+    "CP-536",
+    "CP-534",
+    "CP-550"
+],
+1,
+"CP-536 is the complaint report form per the complaint and disciplinary process notes.",
+"Non-Legal"
+)
+
+q(
+"""<b>51.</b> Category I complaints include which of the following?" "",
+[
+    "Courtesy violations",
+    "Truthfulness/Integrity violations",
+    "Minor policy violations",
+    "Carrying of credentials issues"
+],
+1,
+"Category I includes serious allegations such as excessive force, false arrest, discrimination/civil rights violations, criminal statute violations, and truthfulness/integrity issues.",
+"Non-Legal"
+)
+
+q(
+"""<b>52.</b> Sworn Category I administrative investigations have a timeframe of:""",
+[
+    "60 days",
+    "95 days",
+    "120 days",
+    "45 days"
+],
+2,
+"Sworn Category I investigations: 120 days (per your notes).",
+"Non-Legal"
+)
+
+q(
+"""<b>53.</b> Weingarten Rights generally apply to:""",
+[
+    "All supervisors only",
+    "Bargaining unit employees who are entitled to union representation during interviews that could lead to discipline",
+    "Only criminal interviews after Miranda",
+    "Only OIG investigations"
+],
+1,
+"Weingarten Rights support bargaining-unit employees requesting union representation in interviews that could lead to discipline or affect working conditions.",
+"Non-Legal"
+)
+
+q(
+"""<b>54.</b> Garrity Rights are best summarized as:""",
+[
+    "You may remain silent in any workplace interview",
+    "You are compelled to answer in an administrative investigation, and those statements are protected from criminal use (as applicable)",
+    "You must be read Miranda before any questioning",
+    "Only applies to civilians"
+],
+1,
+"Garrity: compelled administrative statements; Miranda is separate and relates to criminal custodial interrogation.",
+"Non-Legal"
+)
+
+q(
+"""<b>55.</b> In the USCP organizational structure, a <i>Bureau</i> is best defined as:""",
+[
+    "A small team with collateral duties",
+    "The largest organizational element, commanded by a Bureau Commander/Office Director reporting to the COP/CAO",
+    "A unit commanded by a Sergeant",
+    "A temporary task force"
+],
+1,
+"Your notes: Bureau/Office is the largest element and is commanded by a Bureau Commander/Office Director reporting to the COP or CAO.",
+"Non-Legal"
+)
+
+q(
+"""<b>56.</b> The USCP Board consists of:""",
+[
+    "House and Senate Sergeant at Arms, Architect of the Capitol, and Chief of Police",
+    "Only the Chief of Police and Inspector General",
+    "The President, Vice President, and Speaker",
+    "House Sergeant at Arms, Senate Sergeant at Arms, and OIG only"
+],
+0,
+"Per your notes, the Capitol Police Board includes House SAA, Senate SAA, the Architect of the Capitol, and the Chief of Police.",
+"Non-Legal"
+)
+
+q(
+"""<b>57.</b> The chairmanship of the Capitol Police Board rotates:""",
+[
+    "Every month",
+    "Every two years",
+    "Between the two Sergeants at Arms at the beginning of each year",
+    "Only when the Chief of Police changes"
+],
+2,
+"Your notes state the chairmanship rotates between the two Sergeants at Arms, changing at the beginning of each year.",
+"Non-Legal"
+)
+
+q(
+"""<b>58.</b> For requesting a tag check, the most complete/standard information includes:""",
+[
+    "State and plate/tag number (and, when available, make/model/color/expiration/VIN)",
+    "Only a nickname for the driver",
+    "Only the VIN, no plate needed",
+    "Only the vehicle color"
+],
+0,
+"Standard tag check format starts with state and plate/tag number; additional identifiers like make/model/color/expiration/VIN improve accuracy.",
+"Non-Legal"
+)
+
+q(
+"""<b>59.</b> For a pedestrian stop (not a traffic stop), which is generally correct per your notes?" "",
+[
+    "You must run a permit check on every pedestrian",
+    "Run a name check; license status is irrelevant for pedestrian stop",
+    "Run only a tag check",
+    "Do not run any checks"
+],
+1,
+"Your notes state permit checks are for traffic stops; for pedestrian subject stops, run a name check only—license status is irrelevant.",
+"Non-Legal"
+)
+
+q(
+"""<b>60.</b> If you receive an order that conflicts with a previous order or a written directive, the best practice is to:""",
+[
+    "Ignore the new order",
+    "Follow whichever order you prefer",
+    "Respectfully call attention to the conflict of orders",
+    "Do nothing and document later"
+],
+2,
+"Per your notes: employees should promptly obey lawful orders; if an order conflicts with a prior order or written directive, respectfully call attention to the conflict.",
+"Non-Legal"
+)
+
+assert len(questions) == 60
+
+# HTML template with JS for shuffling choices but keeping answer mapping.
+html_doc = f"""<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>USCP Practice Test (60 Questions) — Hard Mode</title>
+  <style>
+    :root {{
+      --bg: #0b1220;
+      --panel: #101a33;
+      --panel2: #0e1730;
+      --text: #e8eefc;
+      --muted: #a9b6da;
+      --accent: #7aa2ff;
+      --good: #24c36a;
+      --bad: #ff5c74;
+      --warn: #ffd166;
+      --border: rgba(255,255,255,.12);
+    }}
+    * {{ box-sizing: border-box; }}
+    body {{
+      margin: 0; padding: 24px;
+      background: radial-gradient(1200px 600px at 20% 0%, rgba(122,162,255,.18), transparent 55%),
+                  radial-gradient(900px 500px at 80% 10%, rgba(36,195,106,.12), transparent 60%),
+                  var(--bg);
+      color: var(--text);
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
+      line-height: 1.45;
+    }}
+    .wrap {{ max-width: 980px; margin: 0 auto; }}
+    header {{
+      display: flex; flex-wrap: wrap; gap: 12px;
+      align-items: center; justify-content: space-between;
+      margin-bottom: 18px;
+    }}
+    h1 {{
+      font-size: 22px; margin: 0;
+      letter-spacing: .2px;
+    }}
+    .meta {{
+      color: var(--muted);
+      font-size: 13px;
+    }}
+    .card {{
+      border: 1px solid var(--border);
+      background: linear-gradient(180deg, rgba(16,26,51,.92), rgba(14,23,48,.92));
+      border-radius: 14px;
+      padding: 16px;
+      box-shadow: 0 10px 28px rgba(0,0,0,.35);
+      margin-bottom: 14px;
+    }}
+    .controls {{
+      display: flex; flex-wrap: wrap; gap: 10px;
+      align-items: center; justify-content: space-between;
+      margin: 14px 0 10px;
+    }}
+    button {{
+      background: rgba(122,162,255,.18);
+      color: var(--text);
+      border: 1px solid rgba(122,162,255,.35);
+      padding: 10px 12px;
+      border-radius: 12px;
+      cursor: pointer;
+      font-weight: 600;
+    }}
+    button:hover {{ background: rgba(122,162,255,.26); }}
+    button:disabled {{
+      opacity: .55;
+      cursor: not-allowed;
+    }}
+    .pill {{
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 10px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      color: var(--muted);
+      font-size: 13px;
+      background: rgba(255,255,255,.04);
+    }}
+    .grid {{
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 12px;
+    }}
+    .qhead {{
+      display: flex;
+      gap: 10px;
+      justify-content: space-between;
+      align-items: flex-start;
+      flex-wrap: wrap;
+      margin-bottom: 10px;
+    }}
+    .tag {{
+      font-size: 12px;
+      padding: 4px 8px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      color: var(--muted);
+      background: rgba(255,255,255,.03);
+      white-space: nowrap;
+    }}
+    .prompt {{
+      font-size: 15px;
+      color: var(--text);
+    }}
+    .choices {{
+      margin-top: 10px;
+      display: grid;
+      gap: 8px;
+    }}
+    label.choice {{
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+      padding: 10px 10px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,.03);
+      cursor: pointer;
+    }}
+    label.choice:hover {{
+      background: rgba(255,255,255,.06);
+    }}
+    input[type="radio"] {{
+      margin-top: 3px;
+      transform: scale(1.05);
+    }}
+    .letter {{
+      width: 26px; height: 26px;
+      border-radius: 8px;
+      display: inline-flex;
+      align-items: center; justify-content: center;
+      background: rgba(122,162,255,.16);
+      border: 1px solid rgba(122,162,255,.28);
+      font-weight: 800;
+      flex: 0 0 auto;
+    }}
+    .explain {{
+      margin-top: 10px;
+      padding: 10px 12px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      background: rgba(0,0,0,.18);
+      color: var(--muted);
+      display: none;
+    }}
+    .explain.good {{
+      border-color: rgba(36,195,106,.55);
+      background: rgba(36,195,106,.10);
+      color: #c8f5dc;
+    }}
+    .explain.bad {{
+      border-color: rgba(255,92,116,.55);
+      background: rgba(255,92,116,.08);
+      color: #ffd0d8;
+    }}
+    .footer {{
+      color: var(--muted);
+      font-size: 12px;
+      margin-top: 10px;
+    }}
+    .small {{
+      font-size: 12px;
+      color: var(--muted);
+    }}
+    .topnote {{
+      color: var(--muted);
+      font-size: 13px;
+      margin-top: 6px;
+    }}
+    .score {{
+      font-size: 14px;
+      color: var(--text);
+      font-weight: 700;
+    }}
+  </style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div>
+      <h1>USCP Practice Test (60 Questions) — Hard Mode</h1>
+      <div class="topnote">30 legal scenario questions (best charge) + 30 knowledge/policy questions. Choices are randomized per question each time you load.</div>
+    </div>
+    <div class="pill" id="statusPill">Not submitted</div>
+  </header>
+
+  <div class="card">
+    <div class="controls">
+      <div class="pill"><span>🧠</span><span><b>Tip:</b> For scenario items, several answers may fit elements—pick the <b>best / primary / highest</b> charge.</span></div>
+      <div style="display:flex; gap:10px; flex-wrap:wrap;">
+        <button id="btnSubmit">Submit & Grade</button>
+        <button id="btnReset">Reset</button>
+      </div>
+    </div>
+    <div class="score" id="scoreLine">Score: —</div>
+    <div class="small" id="breakdownLine">Legal: — | Non-Legal: —</div>
+  </div>
+
+  <div id="quiz" class="grid"></div>
+
+  <div class="footer">
+    Built as a single-file HTML test for GitHub Pages. No external libraries required.
+  </div>
+</div>
+
+<script>
+const QUESTIONS = {json.dumps(questions)};
+
+function shuffle(arr) {{
+  for (let i = arr.length - 1; i > 0; i--) {{
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }}
+  return arr;
+}}
+
+function renderQuiz() {{
+  const quiz = document.getElementById('quiz');
+  quiz.innerHTML = '';
+
+  QUESTIONS.forEach((q, idx) => {{
+    // Create a shuffled choice order, but keep track of which choice is correct after shuffle
+    const choiceObjs = q.choices.map((text, i) => ({{ text, originalIndex: i }}));
+    shuffle(choiceObjs);
+
+    const correctOriginal = q.correct;
+    const correctShuffledIndex = choiceObjs.findIndex(c => c.originalIndex === correctOriginal);
+
+    // Store mapping for grading
+    q._shuffled = choiceObjs;
+    q._correctShuffled = correctShuffledIndex;
+
+    const card = document.createElement('div');
+    card.className = 'card';
+    card.id = `q_${idx}`;
+
+    const head = document.createElement('div');
+    head.className = 'qhead';
+
+    const prompt = document.createElement('div');
+    prompt.className = 'prompt';
+    prompt.innerHTML = q.prompt;
+
+    const tag = document.createElement('div');
+    tag.className = 'tag';
+    tag.textContent = q.category;
+
+    head.appendChild(tag);
+    card.appendChild(head);
+    card.appendChild(prompt);
+
+    const choices = document.createElement('div');
+    choices.className = 'choices';
+
+    const letters = ['A','B','C','D'];
+
+    choiceObjs.forEach((c, ci) => {{
+      const id = `q${idx}_c${ci}`;
+      const label = document.createElement('label');
+      label.className = 'choice';
+      label.setAttribute('for', id);
+
+      const radio = document.createElement('input');
+      radio.type = 'radio';
+      radio.name = `q${idx}`;
+      radio.id = id;
+      radio.value = String(ci);
+
+      const letter = document.createElement('div');
+      letter.className = 'letter';
+      letter.textContent = letters[ci];
+
+      const text = document.createElement('div');
+      text.innerHTML = c.text;
+
+      label.appendChild(radio);
+      label.appendChild(letter);
+      label.appendChild(text);
+      choices.appendChild(label);
+    }});
+
+    card.appendChild(choices);
+
+    const explain = document.createElement('div');
+    explain.className = 'explain';
+    explain.id = `exp_${idx}`;
+    explain.innerHTML = q.explanation;
+    card.appendChild(explain);
+
+    quiz.appendChild(card);
+  }});
+}}
+
+function grade() {{
+  let correct = 0;
+  let correctLegal = 0;
+  let correctNon = 0;
+  let totalLegal = 0;
+  let totalNon = 0;
+
+  QUESTIONS.forEach((q, idx) => {{
+    const isLegal = q.category === "Legal";
+    if (isLegal) totalLegal++; else totalNon++;
+
+    const radios = document.getElementsByName(`q${idx}`);
+    let chosen = -1;
+    for (const r of radios) {{
+      if (r.checked) {{ chosen = parseInt(r.value, 10); break; }}
+    }}
+
+    const exp = document.getElementById(`exp_${idx}`);
+    exp.style.display = 'block';
+
+    if (chosen === q._correctShuffled) {{
+      correct++;
+      if (isLegal) correctLegal++; else correctNon++;
+      exp.classList.remove('bad');
+      exp.classList.add('good');
+      exp.innerHTML = "<b>Correct.</b> " + q.explanation;
+    }} else {{
+      exp.classList.remove('good');
+      exp.classList.add('bad');
+
+      const letters = ['A','B','C','D'];
+      const correctLetter = letters[q._correctShuffled];
+      const correctText = q._shuffled[q._correctShuffled].text;
+      const chosenText = (chosen >= 0 && chosen < 4) ? q._shuffled[chosen].text : "<i>No answer selected</i>";
+
+      exp.innerHTML =
+        "<b>Incorrect.</b> " +
+        "<div style='margin-top:6px'><b>Your answer:</b> " + chosenText + "</div>" +
+        "<div style='margin-top:6px'><b>Best answer (" + correctLetter + "):</b> " + correctText + "</div>" +
+        "<div style='margin-top:8px'>" + q.explanation + "</div>";
+    }}
+  }});
+
+  const pct = Math.round((correct / QUESTIONS.length) * 100);
+  document.getElementById('scoreLine').textContent = `Score: ${correct}/${QUESTIONS.length} (${pct}%)`;
+  document.getElementById('breakdownLine').textContent =
+    `Legal: ${correctLegal}/${totalLegal} | Non-Legal: ${correctNon}/${totalNon}`;
+
+  const pill = document.getElementById('statusPill');
+  pill.textContent = `Submitted • ${pct}%`;
+}}
+
+function resetQuiz() {{
+  // Rerender to reshuffle choices and clear selections/explanations
+  renderQuiz();
+  document.getElementById('scoreLine').textContent = "Score: —";
+  document.getElementById('breakdownLine').textContent = "Legal: — | Non-Legal: —";
+  const pill = document.getElementById('statusPill');
+  pill.textContent = "Not submitted";
+}}
+
+document.getElementById('btnSubmit').addEventListener('click', grade);
+document.getElementById('btnReset').addEventListener('click', resetQuiz);
+
+renderQuiz();
+</script>
+</body>
+</html>
+"""
+
+out_path.write_text(html_doc, encoding="utf-8")
+str(out_path)
